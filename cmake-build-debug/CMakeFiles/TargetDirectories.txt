@@ -1,0 +1,4 @@
+C:/Users/Egor/CLionProjects/cpp-async/cmake-build-debug/CMakeFiles/async_server.dir
+C:/Users/Egor/CLionProjects/cpp-async/cmake-build-debug/CMakeFiles/test.dir
+C:/Users/Egor/CLionProjects/cpp-async/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Egor/CLionProjects/cpp-async/cmake-build-debug/CMakeFiles/rebuild_cache.dir

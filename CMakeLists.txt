@@ -4,6 +4,9 @@ cmake_policy(SET CMP0016 NEW)
 project(async_server VERSION 1.0.0 DESCRIPTION "Знакомство с асинхронным вводом/выводом на C++")
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
+add_executable(async_server src/main.cpp)
 
 enable_testing()
-add_subdirectory(test)
+if (BUILD_TESTING)
+    add_subdirectory(test)
+endif ()
