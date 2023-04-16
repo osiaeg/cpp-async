@@ -1,0 +1,5 @@
+/home/egor/Documents/code/C++/cpp-async/build/CMakeFiles/async_client.dir
+/home/egor/Documents/code/C++/cpp-async/build/CMakeFiles/async_server.dir
+/home/egor/Documents/code/C++/cpp-async/build/CMakeFiles/test.dir
+/home/egor/Documents/code/C++/cpp-async/build/CMakeFiles/edit_cache.dir
+/home/egor/Documents/code/C++/cpp-async/build/CMakeFiles/rebuild_cache.dir
