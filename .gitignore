@@ -34,3 +34,5 @@
 # Directories
 .idea/
 cmake-build-debug/
+build/
+boost_lib/
