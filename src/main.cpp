@@ -5,6 +5,8 @@
 
 int main(int argc, char* argv[]) {
     std::cout << "Hello world!" << std::endl;
-    std::cout << argv[1] << std::endl;
+    int count_threads = std::stoi(argv[1]);
+
+    std::cout << count_threads << std::endl;
     return 0;
 }
