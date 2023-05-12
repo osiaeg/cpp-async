@@ -25,21 +25,24 @@ int main(int argc, char* argv[]) {
     tcp::resolver resolver(io_context);
     const std::string HOST = "localhost";
     const std::string PORT = "9000";
-    boost::asio::connect(s, resolver.resolve(HOST, PORT));
+    const std::string MESSAGE = "Знакомство с асинхронным вводом/выводом";
 
-    for (int i = 0; i < read_write_cycles; i++) {
-        std::cout << "Enter message: ";
-        char request[max_length];
-        std::cin.getline(request, max_length);
-        size_t request_length = std::strlen(request);
-        boost::asio::write(s, boost::asio::buffer(request, request_length));
+    for (int i = 0; i < num_threads; i++) {
+        boost::asio::connect(s, resolver.resolve(HOST, PORT));
+        for (int j = 0; j < read_write_cycles; j++) {
+            std::cout << "Enter message: " << std::endl;
+            char request[max_length];
+            //std::cin.getline(request, max_length);
+            size_t request_length = std::strlen(request);
+            boost::asio::write(s, boost::asio::buffer(request, request_length));
 
-        char reply[max_length];
-        size_t reply_length = boost::asio::read(s,
-            boost::asio::buffer(reply, request_length));
-        std::cout << "Reply is: ";
-        std::cout.write(reply, reply_length);
-        std::cout << "\n";
+            char reply[max_length];
+            size_t reply_length = boost::asio::read(s, boost::asio::buffer(reply, request_length));
+            std::cout << "Reply is: ";
+            std::cout.write(reply, reply_length);
+            std::cout << "\n";
+        }
+        std::cout << "Client disconnect" << std::endl;
     }
   }
   catch (std::exception& e) {
