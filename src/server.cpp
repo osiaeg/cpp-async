@@ -8,19 +8,27 @@ using boost::asio::ip::tcp;
 
 class session : public std::enable_shared_from_this<session> {
 public:
-  session(tcp::socket socket) : socket_(std::move(socket)) {}
+  session(tcp::socket socket, int num) : socket_(std::move(socket)) {
+      this->num_ = num;
+  }
 
   void start() {
     do_read();
   }
 
 private:
+  void connection_lost() const {
+    std::cout << "Connection lost: " << num_ << std::endl;
+  }
+
   void do_read() {
     auto self(shared_from_this());
     socket_.async_read_some(boost::asio::buffer(data_, max_length),
         [this, self](boost::system::error_code ec, std::size_t length) {
           if (!ec) {
             do_write(length);
+          } else {
+              connection_lost();
           }
         });
   }
@@ -31,13 +39,17 @@ private:
         [this, self](boost::system::error_code ec, std::size_t /*length*/) {
           if (!ec) {
             do_read();
+          } else {
+              connection_lost();
           }
         });
+
   }
 
   tcp::socket socket_;
+  int num_;
   enum { max_length = 1024 };
-  char data_[max_length];
+  char data_[max_length]{};
 };
 
 class server {
@@ -53,13 +65,17 @@ private:
         [this](boost::system::error_code ec, tcp::socket socket) {
         
           if (!ec) {
-            std::make_shared<session>(std::move(socket))->start();
+              ++client_num;
+            std::shared_ptr<session> Session = std::make_shared<session>(std::move(socket), client_num);
+            Session->start();
+            std::cout << "Connection apply: " << client_num << std::endl;
           }
 
           do_accept();
         });
   }
 
+  int client_num {0};
   tcp::acceptor acceptor_;
 };
 
