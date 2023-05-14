@@ -67,9 +67,7 @@ private: void do_accept() {
                 });
     }
 
-    int client_num {
-            0
-    };
+    int client_num { 0 };
     tcp::acceptor acceptor_;
 };
 

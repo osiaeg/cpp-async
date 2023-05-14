@@ -1,11 +1,6 @@
-#include <cstdlib>
-
 #include <cstring>
-
 #include <iostream>
-
 #include "boost/asio.hpp"
-
 #include <thread>
 
 using boost::asio::ip::tcp;
@@ -22,8 +17,13 @@ void connect_client(boost::asio::io_context & context, int cycles) {
     boost::asio::connect(s, resolver.resolve(HOST, PORT));
 
     for (int i = 0; i < cycles; i++) {
-        std::cout << "Enter message: \n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::string string{"Hello"};
+        std::cout << "Send message: " << string;
         char request[max_length] { 0 };
+        for (int i = 0; i < string.length(); i++) {
+            request[i] = string[i];
+        }
         //        std::cin.getline(request, max_length);
         size_t request_length = std::strlen(request);
         boost::asio::write(s, boost::asio::buffer(request, request_length));
@@ -49,33 +49,14 @@ int main(int argc, char * argv[]) {
         int read_write_cycles = std::stoi(argv[2]);
         std::cout << "Read/Write cycles: " << read_write_cycles << std::endl;
         boost::asio::io_context io_context;
-        std::thread t1 {
-                connect_client,
-                std::ref(io_context),
-                100
-        };
-        std::thread t2 {
-                connect_client,
-                std::ref(io_context),
-                5000
-        };
-        std::thread t3 {
-                connect_client,
-                std::ref(io_context),
-                1000
-        };
-        t1.join();
-        t2.join();
-        t3.join();
 
-        //      std::vector<std::thread> threads(num_threads);
-        //      // spawn n threads:
-        //      for (int i = 0; i < num_threads; i++) {
-        //          threads[i] = std::thread(connect_client, std::ref(io_context), read_write_cycles);
-        //      }
-        //      for (auto& th : threads) {
-        //          th.join();
-        //      }
+        std::vector<std::thread> threads(num_threads);
+        for (int i = 0; i < num_threads; i++) {
+            threads[i] = std::thread(connect_client, std::ref(io_context), read_write_cycles);
+        }
+        for (auto& th : threads) {
+            th.join();
+        }
     } catch (std::exception & e) {
         std::cerr << "Exception: " << e.what() << "\n";
     }
