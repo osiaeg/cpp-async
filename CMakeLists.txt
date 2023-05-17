@@ -8,7 +8,7 @@ set (BOOST_ROOT "/home/osia/.local")
 find_package(Boost 1.82.0 REQUIRED COMPONENTS system)
 
 add_executable(async_client src/client.cpp)
-add_executable(async_server src/server.cpp)
+add_executable(async_server src/async_server/server.cpp)
 target_include_directories(async_client PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(async_client Boost::system)
 target_include_directories(async_server PUBLIC ${Boost_INCLUDE_DIRS})

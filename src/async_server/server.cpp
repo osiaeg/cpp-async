@@ -78,9 +78,8 @@ int main() {
 
         short port = 9000;
         server s(io_context, port);
-        std::cout << "Server start on port: " << port << std::endl;
-
         io_context.run();
+
     } catch (std::exception & e) {
         std::cerr << "Exception: " << e.what() << "\n";
     }
