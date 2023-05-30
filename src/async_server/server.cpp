@@ -6,17 +6,20 @@
 using boost::asio::ip::tcp;
 
 class session: public std::enable_shared_from_this < session > {
-public: session(tcp::socket socket, int num): socket_(std::move(socket)) {
-        this -> num_ = num;
+public:
+    session(tcp::socket socket, int num): socket_(std::move(socket)), num_(num) {
+        std::cout << "connection established: " << num_ << std::endl;
+    }
+
+    ~session(){
+        std::cout << "connection lost: " << num_ << std::endl;
     }
 
     void start() {
         do_read();
     }
 
-private: void connection_lost() const {
-        std::cout << "connection lost: " << num_ << std::endl;
-    }
+private:
 
     void do_read() {
         auto self(shared_from_this());
@@ -24,8 +27,6 @@ private: void connection_lost() const {
                                 [this, self](boost::system::error_code ec, std::size_t length) {
                                     if (!ec) {
                                         do_write(length);
-                                    } else if (ec == boost::asio::error::eof || ec == boost::asio::error::connection_reset) {
-                                        connection_lost();
                                     }
                                 });
     }
@@ -41,26 +42,25 @@ private: void connection_lost() const {
 
     }
 
-    tcp::socket socket_;
     int num_;
+    tcp::socket socket_;
     enum { max_length = 1024 };
     char data_[max_length] {};
 };
 
 class server {
-public: server(boost::asio::io_context & io_context, short port): acceptor_(io_context, tcp::endpoint(tcp::v4(), port)) {
+public:
+    server(boost::asio::io_context & io_context, short port): acceptor_(io_context, tcp::endpoint(tcp::v4(), port)) {
         do_accept();
     }
 
-private: void do_accept() {
+private:
+    void do_accept() {
         acceptor_.async_accept(
                 [this](boost::system::error_code ec, tcp::socket socket) {
 
                     if (!ec) {
-                        ++client_num;
-                        std::shared_ptr < session > Session = std::make_shared < session > (std::move(socket), client_num);
-                        Session -> start();
-                        std::cout << "connection established: " << client_num << std::endl;
+                        std::make_shared < session > (std::move(socket), ++client_num) -> start();
                     }
 
                     do_accept();
@@ -73,11 +73,10 @@ private: void do_accept() {
 
 int main() {
     try {
-
+        const short PORT = 9000;
         boost::asio::io_context io_context;
 
-        short port = 9000;
-        server s(io_context, port);
+        server s(io_context, PORT);
         io_context.run();
 
     } catch (std::exception & e) {

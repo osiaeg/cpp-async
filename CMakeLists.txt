@@ -5,7 +5,7 @@ project(async_server_client VERSION 1.0.0 DESCRIPTION "Знакомство с �
 
 set (BOOST_ROOT "/home/osia/.local")
 
-find_package(Boost 1.82.0 REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system)
 
 add_executable(async_client src/client.cpp)
 add_executable(async_server src/async_server/server.cpp)

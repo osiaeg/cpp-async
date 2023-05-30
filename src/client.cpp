@@ -1,4 +1,3 @@
-#include <cstring>
 #include <iostream>
 #include "boost/asio.hpp"
 #include <thread>
@@ -17,21 +16,12 @@ void connect_client(boost::asio::io_context & context, int cycles) {
     boost::asio::connect(s, resolver.resolve(HOST, PORT));
 
     for (int i = 0; i < cycles; i++) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        std::string string{"Hello"};
-//        std::cout << "Send message: " << string;
-        char request[max_length] { 0 };
-        for (int j = 0; j < string.length(); j++) {
-            request[j] = string[j];
-        }
-        size_t request_length = std::strlen(request);
+        std::string request{"Hello"};
+        size_t request_length = request.length();
         boost::asio::write(s, boost::asio::buffer(request, request_length));
 
         char reply[max_length] { 0 };
-        size_t reply_length = boost::asio::read(s, boost::asio::buffer(reply, request_length));
-//        std::cout << "Reply is: ";
-//        std::cout.write(reply, reply_length);
-//        std::cout << "\n";
+        boost::asio::read(s, boost::asio::buffer(reply, request_length));
     }
 
 }
@@ -44,9 +34,8 @@ int main(int argc, char * argv[]) {
         }
 
         int num_threads = std::stoi(argv[1]);
-//        std::cout << "Number of clients: " << num_threads << std::endl;
         int read_write_cycles = std::stoi(argv[2]);
-//        std::cout << "Read/Write cycles: " << read_write_cycles << std::endl;
+
         boost::asio::io_context io_context;
 
         std::vector<std::thread> threads(num_threads);
