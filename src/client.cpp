@@ -11,19 +11,23 @@ const std::string HOST = "localhost";
 const std::string PORT = "9000";
 
 void connect_client(boost::asio::io_context & context, int cycles) {
-    tcp::socket s(context);
-    tcp::resolver resolver(context);
-    boost::asio::connect(s, resolver.resolve(HOST, PORT));
+    try {
+        tcp::socket s(context);
+        tcp::resolver resolver(context);
+        boost::asio::connect(s, resolver.resolve(HOST, PORT));
 
-    for (int i = 0; i < cycles; i++) {
-        std::string request{"Hello"};
-        size_t request_length = request.length();
-        boost::asio::write(s, boost::asio::buffer(request, request_length));
 
-        char reply[max_length] { 0 };
-        boost::asio::read(s, boost::asio::buffer(reply, request_length));
+        for (int i = 0; i < cycles; i++) {
+            std::string request{"Hello"};
+            size_t request_length = request.length();
+            boost::asio::write(s, boost::asio::buffer(request, request_length));
+
+            char reply[max_length] { 0 };
+            boost::asio::read(s, boost::asio::buffer(reply, request_length));
+        }
+    } catch (std::exception &e) {
+        std::cerr << "Exception: " << e.what() << "\n";
     }
-
 }
 
 int main(int argc, char * argv[]) {

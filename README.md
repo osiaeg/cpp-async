@@ -12,3 +12,8 @@ cd boost_X_XX_X
 ./b2 install --with-system --with-thread --with-date_time --with-regex --with-serialization --prefix=/dir/to/install/lib
 ```
 
+## Uninstall
+```shell
+sudo rm -rf /usr/local/lib/libboost* cmake
+sudo rm -rf /usr/local/include/boost
+```

@@ -3,8 +3,6 @@ cmake_policy(SET CMP0016 NEW)
 
 project(async_server_client VERSION 1.0.0 DESCRIPTION "Знакомство с асинхронным вводом/выводом на C++")
 
-set (BOOST_ROOT "/home/osia/.local")
-
 find_package(Boost REQUIRED COMPONENTS system)
 
 add_executable(async_client src/client.cpp)
